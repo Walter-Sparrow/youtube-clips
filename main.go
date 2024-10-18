@@ -24,6 +24,7 @@ type ClipRequest struct {
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /clip", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("POST /clip")
 		var req ClipRequest
 		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
