@@ -23,6 +23,10 @@ type ClipRequest struct {
 
 func main() {
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("GET /")
+		w.Write([]byte("Hello World"))
+	})
 	mux.HandleFunc("POST /clip", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("POST /clip")
 		var req ClipRequest
