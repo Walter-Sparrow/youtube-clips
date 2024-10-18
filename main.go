@@ -22,6 +22,10 @@ type ClipRequest struct {
 }
 
 func main() {
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://194.87.26.15:6969"},
+		AllowedMethods: []string{"GET", "POST", "OPTIONS"},
+	})
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("GET /")
@@ -43,13 +47,22 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 	mux.Handle("GET /clips/", http.StripPrefix("/clips/", http.FileServer(http.Dir(clipsDir))))
-	handler := cors.Default().Handler(mux)
+	handler := c.Handler(mux)
 	http.ListenAndServe(":8080", handler)
 }
 
 func clip(videoId string, start, duration string) error {
 	var out, err bytes.Buffer
-	youtubeDl := exec.Command("yt-dlp", "--force-ipv4", "-g", youtubeUrl+videoId, "--skip-download")
+	youtubeDl := exec.Command("yt-dlp",
+		"--force-ipv4",
+		"-S",
+		"+height:480",
+		"-f",
+		"bv*+ba",
+		"-g",
+		youtubeUrl+videoId,
+		"--skip-download",
+	)
 	youtubeDl.Stdout = &out
 	youtubeDl.Stderr = &err
 
