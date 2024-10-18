@@ -24,6 +24,7 @@ type ClipRequest struct {
 func main() {
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://194.87.26.15:6969"},
+		AllowedMethods: []string{"GET", "POST", "OPTIONS"},
 	})
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /clip", func(w http.ResponseWriter, r *http.Request) {
