@@ -42,7 +42,7 @@ func main() {
 		}
 		w.WriteHeader(http.StatusOK)
 	})
-	mux.Handle("/clips/", http.StripPrefix("/clips/", http.FileServer(http.Dir(clipsDir))))
+	mux.Handle("GET /clips/", http.StripPrefix("/clips/", http.FileServer(http.Dir(clipsDir))))
 	handler := cors.Default().Handler(mux)
 	http.ListenAndServe(":8080", handler)
 }
