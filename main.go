@@ -22,10 +22,6 @@ type ClipRequest struct {
 }
 
 func main() {
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://194.87.26.15:6969"},
-		AllowedMethods: []string{"GET", "POST", "OPTIONS"},
-	})
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /clip", func(w http.ResponseWriter, r *http.Request) {
 		var req ClipRequest
@@ -42,7 +38,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 	mux.Handle("/clips/", http.StripPrefix("/clips/", http.FileServer(http.Dir(clipsDir))))
-	handler := c.Handler(mux)
+	handler := cors.Default().Handler(mux)
 	http.ListenAndServe(":8080", handler)
 }
 
