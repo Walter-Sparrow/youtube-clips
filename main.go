@@ -49,7 +49,7 @@ func main() {
 
 func clip(videoId string, start, duration string) error {
 	var out, err bytes.Buffer
-	youtubeDl := exec.Command("yt-dlp", "-g", youtubeUrl+videoId, "--skip-download")
+	youtubeDl := exec.Command("yt-dlp", "--force-ipv4", "-g", youtubeUrl+videoId, "--skip-download")
 	youtubeDl.Stdout = &out
 	youtubeDl.Stderr = &err
 
