@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os/exec"
 	"strings"
+
+	"github.com/rs/cors"
 )
 
 const youtubeUrl = "https://www.youtube.com/watch?v="
@@ -20,6 +22,9 @@ type ClipRequest struct {
 }
 
 func main() {
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://194.87.26.15:6969"},
+	})
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /clip", func(w http.ResponseWriter, r *http.Request) {
 		var req ClipRequest
@@ -36,7 +41,8 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 	mux.Handle("/clips/", http.StripPrefix("/clips/", http.FileServer(http.Dir(clipsDir))))
-	http.ListenAndServe(":8080", mux)
+	handler := c.Handler(mux)
+	http.ListenAndServe(":8080", handler)
 }
 
 func clip(videoId string, start, duration string) error {
