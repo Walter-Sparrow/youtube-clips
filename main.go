@@ -46,7 +46,11 @@ func main() {
 		}
 		w.WriteHeader(http.StatusOK)
 	})
-	mux.Handle("GET /clips/", http.StripPrefix("/clips/", http.FileServer(http.Dir(clipsDir))))
+	mux.HandleFunc("GET /clips/{videoId}", func(w http.ResponseWriter, r *http.Request) {
+		videoId := r.PathValue("videoId")
+		log.Printf("GET /clips/%s", videoId)
+		http.ServeFile(w, r, clipsDir+"/"+videoId)
+	})
 	handler := c.Handler(mux)
 	http.ListenAndServe(":8080", handler)
 }
